@@ -5,4 +5,4 @@ pandas
 numpy
 matplotlib
 plotly
-sklearn
+sklearn.model_selection
