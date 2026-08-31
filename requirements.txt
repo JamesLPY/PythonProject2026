@@ -6,7 +6,3 @@ numpy
 matplotlib
 plotly
 train_test_split
-MinMaxScaler
-mean_squared_error
-mean_absolute_error
-r2_score
