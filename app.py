@@ -1,4 +1,3 @@
-#只有用AI換成streamlit格式尚末生成指標分析
 import streamlit as st
 import yfinance as yf
 from datetime import datetime, timedelta
@@ -39,7 +38,7 @@ st.sidebar.header("⚙️ 參數設定")
 stock_id = st.sidebar.text_input("股票代號", "2330.TW")
 
 # 加上 .date() 確保一開始就是純日期格式，避免 yfinance 初次載入報錯
-default_start = datetime(2025, 11, 19).date()
+default_start = datetime(2025, 10, 10).date()
 default_end = datetime(2026, 5, 22).date()
 
 target_start = st.sidebar.date_input("觀測起始日", default_start)
@@ -207,10 +206,16 @@ ax1.set_title(f"【{stock_id}】綜合技術分析", fontsize=16)
 # --- Ax2: OBV 與 成交量 ---
 ax2.set_xticks(x_ticks_pos)
 ax2.set_xticklabels([]) # 隱藏重疊字體
-vol_colors = np.where(df['Close'] > df['Close'].shift(1), 'r', 'g')
+#vol_colors = np.where(df['Close'] > df['Close'].shift(1), 'r', 'g')
+conditions = [
+    df['Close'] > df['Close'].shift(1),  # 漲 -> 紅
+    df['Close'] < df['Close'].shift(1)   # 跌 -> 綠
+]
+choices = ['r', 'g']
+vol_colors = np.select(conditions, choices, default='gray')
 ax2.plot(df['OBV'], color='purple', ls='--', label='OBV')
 ax2_v = ax2.twinx()
-ax2_v.bar(df.index, df['Volume'], color=vol_colors, alpha=0.3, width=0.8)
+ax2_v.bar(df.index, df['Volume'], color=vol_colors, alpha=0.7, width=0.8)
 ax2.set_title("OBV 能量潮")
 ax2.legend(loc='upper left', fontsize='small')
 
